@@ -2,7 +2,16 @@ class HTMLNode:
 	def __init__(self, tag = None, value = None, children = None, props = None):
 		self.tag = tag
 		self.value = value
-		self.children = children
+		
+		if children == None:
+			self.children = children
+		elif isinstance(children, list):
+			for i in range(len(children)):
+				if not isinstance(children[i], HTMLNode):
+					raise ValueError(f"children[{i}]: is not an instance of a HTMLNode")
+			self.children = children
+		else:
+			raise ValueError(f"children is set and is not an instance of a list")
 
 		if props != None:
 			self.props = dict(props)
