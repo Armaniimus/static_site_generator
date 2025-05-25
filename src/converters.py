@@ -2,7 +2,7 @@ from textnode import TextType
 from leafnode import LeafNode
 
 def text_node_to_html_node(textnode):
-	if textnode.text_type == TextType.NORMAL:
+	if textnode.text_type == TextType.TEXT:
 		node = LeafNode(None, textnode.text)
 	elif textnode.text_type == TextType.BOLD:
 		node = LeafNode("b", textnode.text)
