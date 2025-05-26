@@ -64,3 +64,41 @@ def extract_markdown_images(text):
 def extract_markdown_links(text):
 	regex = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
 	return re.findall(regex, text)
+
+def __split_nodes_img_link(extract_func, remake_func):
+	def inner_func(old_nodes):
+		if not isinstance(old_nodes, list):
+			raise ValueError("first argument[old_nodes] is not a list")
+		
+		nodes_out = []
+
+		for node in old_nodes:
+			base_text = node.text
+			extracted_images = extract_func(node.text)
+
+			for i in range(len(extracted_images)):
+				delimitor = remake_func(extracted_images[i])
+				split_str = base_text.split(delimitor, 2)
+				nodes_out.append( TextNode(split_str[0], node.text_type) )
+				nodes_out.append( TextNode(extracted_images[i][0], TextType.IMAGE, extracted_images[i][1]) )
+				base_text = split_str[1]
+			if base_text != "":
+				nodes_out.append( TextNode(split_str[1], node.text_type) )
+		return nodes_out
+	return inner_func
+
+def split_nodes_link(old_nodes):
+	def remake_link(tuple):
+		return f"[{tuple[0]}]({tuple[1]})"
+	
+	func = __split_nodes_img_link(extract_markdown_links, remake_link)
+	
+	return func(old_nodes)
+
+def split_nodes_image(old_nodes):
+	def remake_image(tuple):
+		return f"![{tuple[0]}]({tuple[1]})"
+	
+	func = __split_nodes_img_link(extract_markdown_images, remake_image)
+
+	return func(old_nodes)
