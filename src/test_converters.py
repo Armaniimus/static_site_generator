@@ -1,7 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
-from converters import text_node_to_html_node, split_nodes_delimiter
+from converters import text_node_to_html_node, split_nodes_delimiter, extract_markdown_images, extract_markdown_links
 
 
 class TestTextNodeToHtml(unittest.TestCase):
@@ -128,5 +128,53 @@ class TestSplitNodesDelimiter(unittest.TestCase):
 
 		self.assertEqual(actual_nodes, expected_nodes)
 
+	def test_extract_markdown_images(self):
+		matches = extract_markdown_images(
+			"This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
+		)
+		self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
+	
+	def test_extract_markdown_images_alt_text(self):
+		matches = extract_markdown_images(
+			"This is text with an ![alternative_img_text](https://i.imgur.com/zjjcJKZ.png)"
+		)
+		self.assertListEqual([("alternative_img_text", "https://i.imgur.com/zjjcJKZ.png")], matches)
+
+	def test_extract_markdown_images_x3(self):
+		matches = extract_markdown_images(
+			"This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)\n" +
+			"This is another text with an ![fotoshoot](https://i.imgur.com/aob.png)\n" +
+			"This is last text with an ![chores](https://i.imgur.com/deac.png)"
+		)
+		self.assertListEqual([
+			("image", "https://i.imgur.com/zjjcJKZ.png"), 
+			("fotoshoot", "https://i.imgur.com/aob.png"), 
+			("chores", "https://i.imgur.com/deac.png") 
+		], matches)
+
+	def test_extract_markdown_links(self):
+		matches = extract_markdown_links(
+			"This is text with an [link](https://i.imgur.com)"
+		)
+		self.assertListEqual([("link", "https://i.imgur.com")], matches)
+
+	def test_extract_markdown_links_alt_text(self):
+		matches = extract_markdown_links(
+			"This is text with an [alternative_link_text](https://i.imgur.com)"
+		)
+		self.assertListEqual([("alternative_link_text", "https://i.imgur.com")], matches)
+
+	def test_extract_markdown_links_x3(self):
+		matches = extract_markdown_links(
+			"This is text with an [link](https://i.imgur.com)\n" +
+			"This is text with an [marketing](https://marketing.com/how-to-start)\n" +
+			"This is text with an [social](https://facbook.com/marketing-guru)"
+		)
+		self.assertListEqual([
+			("link", "https://i.imgur.com"),
+			("marketing", "https://marketing.com/how-to-start"),
+			("social", "https://facbook.com/marketing-guru")
+		], matches)
+
 if __name__ == "__main__":
-		unittest.main()
+	unittest.main()
