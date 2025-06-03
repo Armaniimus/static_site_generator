@@ -1,5 +1,8 @@
 from enum import Enum
 import re
+from converters import text_to_textnodes, text_node_to_html_node
+from parentnode import ParentNode
+from leafnode import LeafNode
 
 class BlockType(Enum):
 	PARAGRAPH = "paragraph"
@@ -53,3 +56,53 @@ def block_to_block_type(block):
 			return BlockType.ORDERED_LIST
 	
 	return BlockType.PARAGRAPH
+
+def markdown_to_html_node(markdown):
+	blocks = markdown_to_blocks(markdown)
+
+	nodes = []
+
+	for b in blocks:
+		nodes.append[create_html_node_from_block(b)]
+
+def create_html_node_from_block(block):
+	block_type = block_to_block_type(block)
+
+	if block_type == BlockType.PARAGRAPH:
+		return create_paragraph_block(block)
+	if block_type == BlockType.HEADING:
+		return create_heading_block(block)
+
+
+	# TODO create code, quote, unordered_list and ordererd_list blocks
+
+	# CODE = "code"
+	# QUOTE = "quote"
+	# UNORDERED_LIST = "unordered_list"
+	# ORDERED_LIST = "ordered_list"
+
+def create_paragraph_block(text):
+	text_nodes = text_to_textnodes(text)
+	leaf_nodes = []
+	for n in text_nodes:
+		leaf_nodes.append(text_node_to_html_node(n))
+
+	return ParentNode("p", leaf_nodes)
+
+def create_heading_block(text):
+	if text.startswith("######"):
+		node_lvl = "h6"
+	elif text.startswith("#####"):
+		node_lvl = "h5"
+	elif text.startswith("####"):
+		node_lvl = "h4"
+	elif text.startswith("###"):
+		node_lvl = "h3"
+	elif text.startswith("##"):
+		node_lvl = "h2"
+	elif text.startswith("#"):
+		node_lvl = "h1"
+	
+	filtered_text = text.lstrip("#")
+
+	return LeafNode(node_lvl, filtered_text)
