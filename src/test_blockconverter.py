@@ -207,7 +207,7 @@ This is the same paragraph on a new line
 
 		input = "```" + code_block_inside + "```"
 
-		expected = ParentNode("blockquote", [LeafNode(None, code_block_inside)])
+		expected = ParentNode("pre", [LeafNode("code", code_block_inside)])
 
 		actual = create_code_block(input)
 
