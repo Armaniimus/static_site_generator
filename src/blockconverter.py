@@ -75,10 +75,13 @@ def create_html_node_from_block(block):
 
 	# TODO create code, quote, unordered_list and ordererd_list blocks
 
-	# CODE = "code"
 	# QUOTE = "quote"
 	# UNORDERED_LIST = "unordered_list"
 	# ORDERED_LIST = "ordered_list"
+
+def create_code_block(text):
+	text_code = text.replace("```", "")
+	return ParentNode("blockquote",[LeafNode(None, text_code)])
 
 def create_paragraph_block(text):
 	text_nodes = text_to_textnodes(text)
