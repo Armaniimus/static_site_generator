@@ -1,6 +1,6 @@
 import unittest
 
-from blockconverter import markdown_to_blocks, block_to_block_type, BlockType
+from blockconverter import *
 
 
 class TestTextNodeToHtml(unittest.TestCase):
@@ -164,6 +164,40 @@ This is the same paragraph on a new line
 			actual = block_to_block_type(p)
 			message = f"\ntest failed: actual is not equal to BlockType.PARAGRAPH\nactual == {actual}\ntestedString == {p}"
 			self.assertEqual(BlockType.PARAGRAPH, actual, message)
+
+	def test_create_heading_block(self):
+		#[inputdata, expected]
+		inputs = [
+			("# h1", LeafNode("h1", "h1")),
+			("## h2", LeafNode("h2", "h2")),
+			("### h3", LeafNode("h3", "h3")),
+			("#### h4", LeafNode("h4", "h4")),
+			("##### h5", LeafNode("h5", "h5")),
+			("###### h6", LeafNode("h6", "h6"))
+		]
+
+		for i in inputs:
+			actual = create_heading_block(i[0])
+			message = f"\nFailed: \n\tinput={i[0]} \n\tactual={actual} \n\texpected={i[1]}"
+			self.assertEqual(actual, i[1], message)
+
+	def test_create_paragraph_block(self):
+		input = "this is dummy test"
+		expected = ParentNode("p", [LeafNode(None, "this is dummy test")])
+
+		actual = create_paragraph_block(input)
+
+		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
+		self.assertEqual(actual, expected, message)
+
+	def test_create_paragraph_block_children(self):
+		input = "this is **dummy** test"
+		expected = ParentNode("p", [LeafNode(None, "this is "), LeafNode("b", "dummy"), LeafNode(None, " test")])
+
+		actual = create_paragraph_block(input)
+
+		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
+		self.assertEqual(actual, expected, message)
 	
 if __name__ == "__main__":
 	unittest.main()

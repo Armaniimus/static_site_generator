@@ -73,7 +73,6 @@ def create_html_node_from_block(block):
 	if block_type == BlockType.HEADING:
 		return create_heading_block(block)
 
-
 	# TODO create code, quote, unordered_list and ordererd_list blocks
 
 	# CODE = "code"
@@ -103,6 +102,6 @@ def create_heading_block(text):
 	elif text.startswith("#"):
 		node_lvl = "h1"
 	
-	filtered_text = text.lstrip("#")
+	filtered_text = text.lstrip("# ")
 
 	return LeafNode(node_lvl, filtered_text)
