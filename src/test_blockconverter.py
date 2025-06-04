@@ -199,5 +199,19 @@ This is the same paragraph on a new line
 		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
 		self.assertEqual(actual, expected, message)
 	
+	def test_create_code_block(self):
+		code_block_inside = """
+		**bold**
+		_italic_
+		"""
+
+		input = "```" + code_block_inside + "```"
+
+		expected = ParentNode("blockquote", [LeafNode(None, code_block_inside)])
+
+		actual = create_code_block(input)
+
+		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
+		self.assertEqual(actual, expected, message)
 if __name__ == "__main__":
 	unittest.main()

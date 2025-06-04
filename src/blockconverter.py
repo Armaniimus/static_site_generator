@@ -81,7 +81,7 @@ def create_html_node_from_block(block):
 
 def create_code_block(text):
 	text_code = text.replace("```", "")
-	return ParentNode("blockquote",[LeafNode(None, text_code)])
+	return ParentNode("blockquote", [LeafNode(None, text_code)])
 
 def create_paragraph_block(text):
 	text_nodes = text_to_textnodes(text)
