@@ -65,8 +65,6 @@ def markdown_to_html_node(markdown):
 	for b in blocks:
 		nodes.append(create_html_node_from_block(b))
 
-	print(f"test 1099: {nodes}")
-
 	return ParentNode("div", nodes)
 
 def create_html_node_from_block(block):
@@ -123,7 +121,8 @@ def create_quote_block(text):
 	return LeafNode("blockquote", quote_text)
 
 def create_code_block(text):
-	text_code = text.replace("```", "").strip(" \n")
+	text_code = text.replace("```", "").strip(" \n\t")
+
 	return ParentNode("pre", [LeafNode("code", text_code)])
 
 def create_paragraph_block(text):
@@ -131,7 +130,7 @@ def create_paragraph_block(text):
 	leaf_nodes = []
 	for n in text_nodes:
 		text_node = text_node_to_html_node(n)
-		text_node.value = text_node.value.replace("\n", "")
+		text_node.value = text_node.value.replace("\n", " ")
 		leaf_nodes.append(text_node)
 
 	return ParentNode("p", leaf_nodes)

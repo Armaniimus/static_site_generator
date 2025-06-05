@@ -200,18 +200,21 @@ This is the same paragraph on a new line
 		self.assertEqual(actual, expected, message)
 	
 	def test_create_code_block(self):
-		code_block_inside = """
+		input = """
+		```
 		**bold**
 		_italic_
+		```
 		"""
 
-		input = "```" + code_block_inside + "```"
+		code_block_test = """**bold**
+		_italic_"""
 
-		expected = ParentNode("pre", [LeafNode("code", code_block_inside)])
+		expected = ParentNode("pre", [LeafNode("code", code_block_test)])
 
 		actual = create_code_block(input)
 
-		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
+		message = f"\nFailed test_create_code_block: \n\ninput={repr(input)} \n\nactual={repr(actual)} \n\nexpected={repr(expected)}"
 		self.assertEqual(actual, expected, message)
 
 	def test_create_quote_block(self):
@@ -285,7 +288,7 @@ quote2
 		self.assertEqual(actual, expected, message)
 
 	def test_paragraphs(self):
-		md = """
+		input = """
 This is **bolded** paragraph
 text in a p
 tag here
@@ -294,26 +297,35 @@ This is another paragraph with _italic_ text and `code` here
 
 """
 
-		node = markdown_to_html_node(md)
-		html = node.to_html()
+		expected = "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>"
+
+		node = markdown_to_html_node(input)
+		actual = node.to_html()
+
+		message = f"\ntest_paragraph failed\n\ninput: {input}\n\nactual: {actual}\n\nexpected: {expected}"
 		self.assertEqual(
-			html,
-			"<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>",
+			actual,
+			expected,
+			message
 		)
 
 	def test_codeblock(self):
-		md = """
+		input = """
 ```
 This is text that _should_ remain
 the **same** even with inline stuff
 ```
 """
+		expected = "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff</code></pre></div>"
 		
-		node = markdown_to_html_node(md)
-		html = node.to_html()
+		node = markdown_to_html_node(input)
+		actual = node.to_html()
+
+		message = f"\ntest_codeblock failed\n\ninput: {input}\n\nactual: {actual}\n\nexpected: {expected}"
 		self.assertEqual(
-			html,
-			"<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff</code></pre></div>",
+			actual,
+			expected,
+			message
 		)
 if __name__ == "__main__":
 	unittest.main()
