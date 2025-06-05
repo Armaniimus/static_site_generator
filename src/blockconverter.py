@@ -75,9 +75,35 @@ def create_html_node_from_block(block):
 
 	# TODO create code, quote, unordered_list and ordererd_list blocks
 
-	# QUOTE = "quote"
-	# UNORDERED_LIST = "unordered_list"
-	# ORDERED_LIST = "ordered_list"
+def create_ordered_list_block(text):
+	lines = text.split("\n")
+	children = []
+	for l in lines:
+		children.append(
+			LeafNode("li", l.lstrip("1234567890.").lstrip(" "))
+		)
+
+	return ParentNode("ol", children)
+
+def create_unordered_list_block(text):
+	lines = text.split("\n")
+	children = []
+	for l in lines:
+		children.append(
+			LeafNode("li", l.lstrip("-").lstrip(" "))
+		)
+
+	return ParentNode("ul", children)
+
+def create_quote_block(text):
+	lines = text.split("\n")
+	quote_text = ""
+	for l in lines:
+		if (quote_text != ""):
+			quote_text += "\n"
+		quote_text += l.lstrip("> ")
+
+	return LeafNode("blockquote", quote_text)
 
 def create_code_block(text):
 	text_code = text.replace("```", "")

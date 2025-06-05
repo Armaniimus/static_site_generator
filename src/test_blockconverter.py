@@ -213,5 +213,76 @@ This is the same paragraph on a new line
 
 		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
 		self.assertEqual(actual, expected, message)
+
+	def test_create_quote_block(self):
+		input = """> quote
+> quote2
+"""
+		expected_text = """quote
+quote2
+"""
+		expected = LeafNode("blockquote", expected_text)
+
+		actual = create_quote_block(input)
+
+		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
+		self.assertEqual(actual, expected, message)
+
+	def test_create_unordered_list_block(self):
+		input = """- ape
+- whale
+- giraffe
+- dog"""
+		actual = create_unordered_list_block(input)
+
+		expected = ParentNode("ul", [
+			LeafNode("li", "ape"),
+			LeafNode("li", "whale"),
+			LeafNode("li", "giraffe"),
+			LeafNode("li", "dog")
+		])
+
+		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
+		self.assertEqual(actual, expected, message)
+
+	def test_create_ordered_list_block(self):
+		input = """1. ape
+2. whale
+3. giraffe
+4. dog"""
+		actual = create_ordered_list_block(input)
+
+		expected = ParentNode("ol", [
+			LeafNode("li", "ape"),
+			LeafNode("li", "whale"),
+			LeafNode("li", "giraffe"),
+			LeafNode("li", "dog")
+		])
+
+		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
+		self.assertEqual(actual, expected, message)
+
+	def test_create_ordered_list_block_long(self):
+		count = 12
+
+		input = ""
+		for i in range(count):
+			if (input != ""):
+				input += "\n"
+			input += f"{i}. item{i}"
+		
+		expected_list = []
+		for i in range(count):
+			expected_list.append(
+				LeafNode("li", f"item{i}"),
+			)
+
+		expected = ParentNode("ol", expected_list)
+
+		actual = create_ordered_list_block(input)
+
+		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
+		self.assertEqual(actual, expected, message)
+
 if __name__ == "__main__":
 	unittest.main()
