@@ -19,13 +19,13 @@ This is the same paragraph on a new line
 
 
 		self.assertEqual(
-            blocks,
-            [
-                "This is **bolded** paragraph",
-                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
-                "- This is a list\n- with items",
-            ],
-        )
+			blocks,
+			[
+				"This is **bolded** paragraph",
+				"This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
+				"- This is a list\n- with items",
+			],
+		)
 
 	def test_markdown_to_blocks_no_empty_lines(self):
 		md = """
@@ -54,13 +54,13 @@ This is the same paragraph on a new line
 
 
 		self.assertEqual(
-            blocks,
-            [
-                "This is **bolded** paragraph",
-                "This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
-                "- This is a list\n- with items",
-            ],
-        )
+			blocks,
+			[
+				"This is **bolded** paragraph",
+				"This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
+				"- This is a list\n- with items",
+			],
+		)
 	
 	def test_block_to_block_type_heading_first(self):
 		text = "# heading1"
@@ -79,7 +79,7 @@ This is the same paragraph on a new line
 	def test_block_to_block_type_heading_all_cases(self):
 		headings = [
 			"# heading1",
-    		"## heading2",
+			"## heading2",
 			"### heading3",
 			"#### heading4",
 			"##### heading5",
@@ -95,7 +95,7 @@ This is the same paragraph on a new line
 		headings = [
 			"heading0",
 			"#heading1",
-    		"##heading2",
+			"##heading2",
 			"###heading3",
 			"####heading4",
 			"#####heading5",
@@ -284,5 +284,36 @@ quote2
 		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
 		self.assertEqual(actual, expected, message)
 
+	def test_paragraphs(self):
+		md = """
+This is **bolded** paragraph
+text in a p
+tag here
+
+This is another paragraph with _italic_ text and `code` here
+
+"""
+
+		node = markdown_to_html_node(md)
+		html = node.to_html()
+		self.assertEqual(
+			html,
+			"<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>",
+		)
+
+	def test_codeblock(self):
+		md = """
+```
+This is text that _should_ remain
+the **same** even with inline stuff
+```
+"""
+		
+		node = markdown_to_html_node(md)
+		html = node.to_html()
+		self.assertEqual(
+			html,
+			"<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff</code></pre></div>",
+		)
 if __name__ == "__main__":
 	unittest.main()

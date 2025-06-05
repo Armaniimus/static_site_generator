@@ -63,17 +63,34 @@ def markdown_to_html_node(markdown):
 	nodes = []
 
 	for b in blocks:
-		nodes.append[create_html_node_from_block(b)]
+		nodes.append(create_html_node_from_block(b))
+
+	print(f"test 1099: {nodes}")
+
+	return ParentNode("div", nodes)
 
 def create_html_node_from_block(block):
 	block_type = block_to_block_type(block)
 
 	if block_type == BlockType.PARAGRAPH:
 		return create_paragraph_block(block)
+	
 	if block_type == BlockType.HEADING:
 		return create_heading_block(block)
-
-	# TODO create code, quote, unordered_list and ordererd_list blocks
+	
+	if block_type == BlockType.CODE:
+		return create_code_block(block)
+	
+	if block_type == BlockType.ORDERED_LIST:
+		return create_ordered_list_block(block)
+	
+	if block_type == BlockType.UNORDERED_LIST:
+		return create_unordered_list_block(block)
+	
+	if block_type == BlockType.QUOTE:
+		return create_quote_block(block)
+	
+	raise ValueError("given block has no valid block-type")
 
 def create_ordered_list_block(text):
 	lines = text.split("\n")
@@ -106,14 +123,16 @@ def create_quote_block(text):
 	return LeafNode("blockquote", quote_text)
 
 def create_code_block(text):
-	text_code = text.replace("```", "")
+	text_code = text.replace("```", "").strip(" \n")
 	return ParentNode("pre", [LeafNode("code", text_code)])
 
 def create_paragraph_block(text):
 	text_nodes = text_to_textnodes(text)
 	leaf_nodes = []
 	for n in text_nodes:
-		leaf_nodes.append(text_node_to_html_node(n))
+		text_node = text_node_to_html_node(n)
+		text_node.value = text_node.value.replace("\n", "")
+		leaf_nodes.append(text_node)
 
 	return ParentNode("p", leaf_nodes)
 
