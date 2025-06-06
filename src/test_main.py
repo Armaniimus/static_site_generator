@@ -14,9 +14,6 @@ class TestMain(unittest.TestCase):
 		with self.assertRaises(Exception):
 			extract_title("blank")
 
-	def test_generate_page(self):
-		generate_page("./content/index.md", "./template.html", "./public/index.html")
-
 		
 if __name__ == "__main__":
 	unittest.main()

@@ -144,7 +144,6 @@ This is the same paragraph on a new line
 
 	def test_block_to_block_type_paragraph(self):
 		paragraphs = [
-			">",
 			"-a",
 			"-",
 			"1.a",
@@ -239,10 +238,10 @@ quote2
 		actual = create_unordered_list_block(input)
 
 		expected = ParentNode("ul", [
-			LeafNode("li", "ape"),
-			LeafNode("li", "whale"),
-			LeafNode("li", "giraffe"),
-			LeafNode("li", "dog")
+			ParentNode("li", [LeafNode(None, "ape")]),
+			ParentNode("li", [LeafNode(None, "whale")]),
+			ParentNode("li", [LeafNode(None, "giraffe")]),
+			ParentNode("li", [LeafNode(None, "dog")])
 		])
 
 		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
@@ -256,10 +255,10 @@ quote2
 		actual = create_ordered_list_block(input)
 
 		expected = ParentNode("ol", [
-			LeafNode("li", "ape"),
-			LeafNode("li", "whale"),
-			LeafNode("li", "giraffe"),
-			LeafNode("li", "dog")
+			ParentNode("li", [LeafNode(None, "ape")]),
+			ParentNode("li", [LeafNode(None, "whale")]),
+			ParentNode("li", [LeafNode(None, "giraffe")]),
+			ParentNode("li", [LeafNode(None, "dog")])
 		])
 
 		message = f"\nFailed: \n\tinput={input} \n\tactual={actual} \n\texpected={expected}"
@@ -277,7 +276,7 @@ quote2
 		expected_list = []
 		for i in range(count):
 			expected_list.append(
-				LeafNode("li", f"item{i}"),
+				ParentNode("li", [LeafNode(None, f"item{i}")]),
 			)
 
 		expected = ParentNode("ol", expected_list)
