@@ -129,9 +129,11 @@ def create_paragraph_block(text):
 	text_nodes = text_to_textnodes(text)
 	leaf_nodes = []
 	for n in text_nodes:
-		text_node = text_node_to_html_node(n)
-		text_node.value = text_node.value.replace("\n", " ")
-		leaf_nodes.append(text_node)
+
+		html_node = text_node_to_html_node(n)
+		if (html_node.value != None):
+			html_node.value = html_node.value.replace("\n", " ")
+		leaf_nodes.append(html_node)
 
 	return ParentNode("p", leaf_nodes)
 

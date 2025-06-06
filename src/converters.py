@@ -15,6 +15,10 @@ def text_node_to_html_node(textnode):
 		node = LeafNode("a", textnode.text, {"href": textnode.url})
 	elif textnode.text_type == TextType.IMAGE:
 		node = LeafNode("img", None, {"alt": textnode.text, "src": textnode.url})
+	elif textnode == None:
+		raise Exception("textnode == None")
+	else:
+		raise Exception("invalid node given")
 
 	return node
 
