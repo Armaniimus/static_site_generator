@@ -29,7 +29,6 @@ class HTMLNode:
 		for key in self.props:
 			if prop_str != "":
 				prop_str += " "
-
 			value = self.props[key]
 			prop_str += f'{key}=\"{value}\"'
 		return prop_str

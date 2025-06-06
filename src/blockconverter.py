@@ -26,7 +26,7 @@ def markdown_to_blocks(markdown):
 def block_to_block_type(block):
 	is_heading = re.match(r"^[#]{1,6} \S", block) != None
 	is_code = re.fullmatch(r"^```[\s\S]+```$", block) != None
-	is_quote_regex = r"^>[\s\S]+"
+	is_quote_regex = r"^>[\s\S]*"
 	is_unordered_list_regex = r"^- [\s\S]+"
 	is_ordered_list_regex = r"^[0-9]+\. [\s\S]+"
 
@@ -69,9 +69,6 @@ def markdown_to_html_node(markdown):
 
 def create_html_node_from_block(block):
 	block_type = block_to_block_type(block)
-
-	if block_type == BlockType.PARAGRAPH:
-		return create_paragraph_block(block)
 	
 	if block_type == BlockType.HEADING:
 		return create_heading_block(block)
@@ -88,15 +85,21 @@ def create_html_node_from_block(block):
 	if block_type == BlockType.QUOTE:
 		return create_quote_block(block)
 	
+	if block_type == BlockType.PARAGRAPH:
+		return create_paragraph_block(block)
+	
 	raise ValueError("given block has no valid block-type")
 
 def create_ordered_list_block(text):
 	lines = text.split("\n")
 	children = []
 	for l in lines:
-		children.append(
-			LeafNode("li", l.lstrip("1234567890.").lstrip(" "))
-		)
+		text_nodes = text_to_textnodes(l.lstrip("1234567890.").lstrip(" "))
+		
+		text_children = []
+		for n in text_nodes:
+			text_children.append(text_node_to_html_node(n))
+		children.append(ParentNode("li", text_children))
 
 	return ParentNode("ol", children)
 
@@ -104,9 +107,12 @@ def create_unordered_list_block(text):
 	lines = text.split("\n")
 	children = []
 	for l in lines:
-		children.append(
-			LeafNode("li", l.lstrip("-").lstrip(" "))
-		)
+		text_nodes = text_to_textnodes(l.lstrip("-").lstrip(" "))
+
+		text_children = []
+		for n in text_nodes:
+			text_children.append(text_node_to_html_node(n))
+		children.append(ParentNode("li", text_children))
 
 	return ParentNode("ul", children)
 

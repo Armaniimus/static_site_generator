@@ -1,13 +1,11 @@
 import os
 import shutil
-from main_utils import extract_title
+from main_utils import generate_page
 
 def main():
 	__clear_public()
 	__add_static_files()
-
-	# markdown = ""
-	# title = __extract_title(markdown)	
+	generate_page("./content/index.md", "./template.html", "./public/index.html")
 
 def __add_static_files():
 	path = "./public"
