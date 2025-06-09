@@ -1,11 +1,13 @@
 import os
 import shutil
-from main_utils import generate_page
+# from main_utils import generate_page
+from main_utils import generate_content_folder
 
 def main():
 	__clear_public()
 	__add_static_files()
-	generate_page("./content/index.md", "./template.html", "./public/index.html")
+	
+	generate_content_folder("./content/", "./template.html", "./public/")
 
 def __add_static_files():
 	path = "./public"
