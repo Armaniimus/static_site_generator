@@ -44,11 +44,24 @@ def get_source_files(source):
 	return result
 
 def get_destination_file(source, source_folder, dest_folder):
-	url = source.lstrip(f"{source_folder}")
-	url = url.rstrip("/index.md")
+	split_source = source.split("/")
+	split_source_folder = source_folder.split("/")
+
+	remove_length = 0
+	for i in range(len(split_source_folder)):
+		if (split_source[i] == split_source_folder[i]):
+			remove_length += 1
+		else:
+			break
+	
+	last_index = split_source[-1:]
+	if last_index == ["index.md"]:
+		url = "/".join(split_source[remove_length:-1])
+	else:
+		url = "/".join(split_source[remove_length:])
 
 	if url == "" and source != "":
-		return "index.html"
+		return f"{dest_folder}index.html"
 	else:
 		return f"{dest_folder}{url}.html"
 	
