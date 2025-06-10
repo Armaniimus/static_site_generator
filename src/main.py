@@ -1,26 +1,31 @@
+import sys
 import os
 import shutil
 # from main_utils import generate_page
 from main_utils import generate_content_folder
 
 def main():
-	__clear_public()
+	basepath = sys.argv[0]
+	if basepath == None:
+		basepath = "/"
+
+	__clear_docs()
 	__add_static_files()
 	
-	generate_content_folder("./content/", "./template.html", "./public/")
+	generate_content_folder("./content/", "./template.html", "./docs/", basepath)
 
 def __add_static_files():
-	path = "./public"
+	path = "./docs"
 	if not os.path.exists(path):
-		os.mkdir("./public")
-		print("log=> created ./public directory")
+		os.mkdir("./docs")
+		print("log=> created ./docs directory")
 	
 	if not os.path.exists("./static"):
 		os.mkdir("./static")
 		print("log=> created ./static directory")
 
 	print("log=> start __copy_dir")
-	__copy_dir("./static", "./public")
+	__copy_dir("./static", "./docs")
 		
 def __copy_dir(source, destination):
 	items = os.listdir(source)
@@ -37,18 +42,18 @@ def __copy_dir(source, destination):
 			__copy_dir(src, dest)
 
 
-def __clear_public():
-	path = "./public"
+def __clear_docs():
+	path = "./docs"
 	if os.path.exists(path):
-		print("log=> ./public exists\nlog=> removing ./public")
+		print("log=> ./docs exists\nlog=> removing ./docs")
 		
-		message = f"log=> shutil.rmtree({path}): succeeded\nlog=> ./public removed"
+		message = f"log=> shutil.rmtree({path}): succeeded\nlog=> ./docs removed"
 		def onerror(): nonlocal message; message = f"shutil.rmtree({path}): failed"
 		
 		shutil.rmtree(path, onerror=onerror)
 		print(message)
 			
 	else:
-		print("log=> public doesn't exist on path:" + path)
+		print("log=> docs doesn't exist on path:" + path)
 		print(f"log=> localdirs: {os.listdir('./')}")
 main()

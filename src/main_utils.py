@@ -11,7 +11,7 @@ def extract_title(markdown):
 		
 	raise Exception("no title added in the markdown")
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
 	print(f"\nGenerating page from {from_path} to {dest_path} using {template_path}")
 
 	f = open(from_path, "r")
@@ -26,6 +26,8 @@ def generate_page(from_path, template_path, dest_path):
 	title = extract_title(markdown)
 
 	result = template.replace("{{ Content }}", content).replace("{{ Title }}", title)
+	result.replace('href="/', f'href="{basepath}')
+	result.replace('src="/', f'src="{basepath}')
 	
 	f = open(dest_path, "w")
 	f.write(result)
@@ -63,7 +65,7 @@ def get_destination_file(source, source_folder, dest_folder):
 	if url == "" and source != "":
 		return f"{dest_folder}index.html"
 	else:
-		return f"{dest_folder}{url}.html"
+		return f"{dest_folder}{url}/index.html"
 	
 def get_content_generation_info(source, destination):
 	source_urls = get_source_files(source)
@@ -76,12 +78,12 @@ def get_content_generation_info(source, destination):
 
 	return out
 
-def generate_content_folder(source, template_path, destination ):
+def generate_content_folder(source, template_path, destination, basepath ):
 	urls = get_content_generation_info(source, destination)
 
 	for u in urls:
 		create_parent_folders(u["destination"])
-		generate_page(u["source"], template_path, u["destination"])
+		generate_page(u["source"], template_path, u["destination"], basepath)
 
 def create_parent_folders(path):
 	path_list = path.split("/")
