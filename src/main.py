@@ -5,7 +5,7 @@ import shutil
 from main_utils import generate_content_folder
 
 def main():
-	basepath = sys.argv[0]
+	basepath = sys.argv[1]
 	if basepath == None:
 		basepath = "/"
 
